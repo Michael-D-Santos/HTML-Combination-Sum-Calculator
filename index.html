@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combination Sum</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <style>
+      body {
+        background-color: #333;
+        color: #fff;
+      }
+  
+      .container {
+        margin-top: 50px;
+      }
+  
+      .form-group label {
+        color: #fff;
+      }
+  
+      .form-control {
+        background-color: #222;
+        border: 1px solid #555;
+        color: #fff;
+      }
+  
+      .form-text.text-muted {
+        color: #aaa;
+      }
+  
+      .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+      }
+  
+      .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+      }
+  
+      #result {
+        margin-top: 20px;
+      }
+  
+      #result p {
+        color: #fff;
+      }
+  
+      #result ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+  
+      #result li {
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+
+
+<body>
+  <div class="container">
+    <h1>Combination Sum</h1>
+    <form>
+      <div class="form-group">
+        <label for="target">Target Number:</label>
+        <input type="number" class="form-control" id="target" required style="margin-top: 10px; margin-bottom: 10px;">
+      </div>
+      <div class="form-group">
+        <label for="numbers">Numbers:</label>
+        <input type="text" class="form-control" id="numbers" required style="margin-top: 10px; margin-bottom: 10px;">
+        <small class="form-text text-muted">Enter numbers separated by commas (e.g. 70, 110, 150, 210)</small>
+      </div>
+      <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Find Combinations</button>
+    </form>
+    <div id="result" class="mt-3"></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+  <script>
+    $(document).ready(function() {
+      $("form").submit(function(event) {
+        event.preventDefault();
+
+        var target = parseInt($("#target").val());
+        var numbers = $("#numbers").val().split(",").map(function(number) {
+          return parseInt(number.trim());
+        });
+
+        var combinations = findCombinations(target, numbers);
+        displayCombinations(combinations);
+      });
+
+      function findCombinations(target, numbers) {
+        var result = [];
+        backtrack(target, numbers, [], 0);
+        return result;
+
+        function backtrack(remaining, nums, combination, start) {
+          if (remaining < 0) {
+            return;
+          } else if (remaining === 0) {
+            result.push(combination.slice());
+          } else {
+            for (var i = start; i < nums.length; i++) {
+              combination.push(nums[i]);
+              backtrack(remaining - nums[i], nums, combination, i);
+              combination.pop();
+            }
+          }
+        }
+      }
+
+      function displayCombinations(combinations) {
+        var resultElement = $("#result");
+        resultElement.empty();
+
+        if (combinations.length === 0) {
+          resultElement.html("<p>No combinations found.</p>");
+        } else {
+          resultElement.append("<p>Combinations:</p>");
+          var ulElement = $("<ul></ul>");
+
+          combinations.forEach(function(combination) {
+            var liElement = $("<li></li>");
+            liElement.text(combination.join(", "));
+            ulElement.append(liElement);
+          });
+
+          resultElement.append(ulElement);
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
